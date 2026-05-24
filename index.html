@@ -12,22 +12,48 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            color: #2c3e50;
-            min-height: 100vh;
-            padding: 20px;
-            transition: all 0.3s ease;
+        :root {
+            --bg: #0b0f14;
+            --bg-elevated: #121821;
+            --panel: #151c25;
+            --panel-2: #1a222d;
+            --border: #273241;
+            --text: #e6edf3;
+            --muted: #94a3b8;
+            --accent: #3aa0a9;
+            --accent-strong: #2b7f86;
+            --accent-soft: rgba(58, 160, 169, 0.12);
+            --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+            --radius: 16px;
         }
 
-        body.dark-mode {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: #e0e0e0;
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(180deg, #0a0e13 0%, #0f141b 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        body.light-mode {
+            --bg: #f3f5f7;
+            --bg-elevated: #ffffff;
+            --panel: #ffffff;
+            --panel-2: #f8fafc;
+            --border: #d8e0e8;
+            --text: #17202a;
+            --muted: #5f6b7a;
+            --accent: #1f6f78;
+            --accent-strong: #17545b;
+            --accent-soft: rgba(31, 111, 120, 0.10);
+            --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            background: linear-gradient(180deg, #eef2f5 0%, #f7f9fb 100%);
+            color: var(--text);
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 980px;
             margin: 0 auto;
         }
 
@@ -35,140 +61,160 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 18px;
+            gap: 16px;
+        }
+
+        .logo-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
         .logo {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 12px;
-            transition: 0.3s;
-        }
-
-        .theme-toggle:hover {
-            transform: rotate(20deg);
-            background: rgba(102,126,234,0.1);
+            letter-spacing: -0.03em;
+            color: var(--text);
         }
 
         .subtitle {
-            text-align: center;
-            margin-bottom: 30px;
-            opacity: 0.7;
-            font-style: italic;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .theme-toggle {
+            background: var(--panel);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 12px;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--panel-2);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .input-section,
+        .card,
+        .empty-state {
+            background: rgba(18, 24, 33, 0.92);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        body.light-mode .input-section,
+        body.light-mode .card,
+        body.light-mode .empty-state {
+            background: rgba(255, 255, 255, 0.94);
         }
 
         .input-section {
-            background: rgba(255,255,255,0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-
-        body.dark-mode .input-section {
-            background: rgba(30,35,60,0.7);
+            padding: 24px;
+            margin-bottom: 26px;
         }
 
         textarea {
             width: 100%;
             height: 220px;
-            border: 2px solid #ddd;
+            border: 1px solid var(--border);
             border-radius: 14px;
-            padding: 20px;
-            font-size: 16px;
+            padding: 18px;
+            font-size: 15px;
+            line-height: 1.6;
             resize: vertical;
-            font-family: 'Courier New', monospace;
-            margin-bottom: 20px;
-            transition: 0.3s;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+            margin-bottom: 18px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            background: var(--bg);
+            color: var(--text);
         }
 
-        body.dark-mode textarea {
-            background: #1a1a2e;
-            color: white;
-            border-color: #444;
+        textarea::placeholder {
+            color: var(--muted);
         }
 
         textarea:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
         }
 
         .button-group {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             flex-wrap: wrap;
         }
 
         button {
-            flex: 1;
             min-width: 140px;
-            padding: 14px 20px;
-            border: none;
+            padding: 13px 18px;
             border-radius: 12px;
-            font-size: 16px;
-            font-weight: bold;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: 0.3s;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
         }
 
         #analyzeBtn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: var(--accent);
+            color: #071217;
+            border: 1px solid var(--accent);
         }
 
         #analyzeBtn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
+            background: var(--accent-strong);
+            border-color: var(--accent-strong);
+            color: #f4fbfc;
+            transform: translateY(-1px);
+        }
+
+        #analyzeBtn:disabled {
+            opacity: 0.75;
+            cursor: wait;
+            transform: none;
         }
 
         #clearBtn {
             background: transparent;
-            border: 2px solid #667eea;
-            color: #667eea;
+            color: var(--text);
+            border: 1px solid var(--border);
         }
 
         #clearBtn:hover {
-            background: rgba(102,126,234,0.1);
+            background: var(--panel-2);
+            border-color: var(--accent);
         }
 
         .results {
             display: grid;
-            grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
         }
 
         .card {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 18px;
-            padding: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            animation: fadeUp 0.4s ease;
+            padding: 20px;
+            animation: fadeUp 0.25s ease;
         }
 
-        body.dark-mode .card {
-            background: rgba(30,35,60,0.8);
+        .summary {
+            grid-column: 1 / -1;
         }
 
         @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(8px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -176,11 +222,21 @@
         }
 
         .card-title {
-            font-size: 14px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            margin-bottom: 15px;
-            color: #667eea;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            margin-bottom: 14px;
+            color: var(--accent);
+        }
+
+        .card p {
+            line-height: 1.65;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
         }
 
         .word-list {
@@ -190,46 +246,47 @@
         }
 
         .word-tag {
-            background: rgba(102,126,234,0.1);
-            border: 1px solid rgba(102,126,234,0.3);
-            padding: 8px 12px;
-            border-radius: 20px;
+            background: var(--accent-soft);
+            border: 1px solid rgba(58, 160, 169, 0.28);
+            padding: 7px 11px;
+            border-radius: 999px;
             font-size: 13px;
-            color: #667eea;
-        }
-
-        .summary {
-            grid-column: 1 / -1;
+            color: var(--text);
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-            opacity: 0.6;
+            padding: 48px 20px;
+            color: var(--muted);
         }
 
         .loading {
             display: inline-block;
             width: 8px;
             height: 8px;
-            background: white;
+            margin-left: 8px;
+            background: currentColor;
             border-radius: 50%;
             animation: pulse 1s infinite;
+            vertical-align: middle;
         }
 
         @keyframes pulse {
-            0%,100% {
+            0%, 100% {
                 opacity: 1;
             }
-
             50% {
-                opacity: 0.3;
+                opacity: 0.35;
             }
         }
 
-        @media(max-width: 700px) {
-            .results {
-                grid-template-columns: 1fr;
+        strong {
+            color: var(--text);
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 16px;
             }
 
             .logo {
@@ -239,56 +296,55 @@
             textarea {
                 height: 180px;
             }
+
+            .results {
+                grid-template-columns: 1fr;
+            }
+
+            .summary {
+                grid-column: auto;
+            }
         }
     </style>
 </head>
-
 <body>
 
     <div class="container">
 
         <header>
-            <div class="logo">✨ Pattern Spotter Lite</div>
+            <div class="logo-wrap">
+                <div class="logo">Pattern Spotter Lite</div>
+            </div>
 
-            <button class="theme-toggle" id="themeToggle">
-                🌙
-            </button>
+            <button class="theme-toggle" id="themeToggle" type="button">Light</button>
         </header>
 
         <div class="subtitle">
-            Discover hidden patterns in your writing
+            Analyze pasted writing for repeated words, recurring themes, tone signals, and structural patterns.
         </div>
 
         <div class="input-section">
 
             <textarea
                 id="textInput"
-                placeholder="Paste your journal, thoughts, essay, dreams, conspiracy notes, philosophy, poetry... anything."></textarea>
+                placeholder="Paste your text here. Journal entries, essays, notes, fragments, ideas, or drafts all work."></textarea>
 
             <div class="button-group">
-                <button id="analyzeBtn">
-                    Find Patterns
-                </button>
-
-                <button id="clearBtn">
-                    Clear
-                </button>
+                <button id="analyzeBtn" type="button">Analyze Text</button>
+                <button id="clearBtn" type="button">Clear</button>
             </div>
 
         </div>
 
         <div id="resultsContainer">
-
             <div class="empty-state">
-                Paste text above and click <strong>Find Patterns</strong>
+                Paste text above, then click <strong>Analyze Text</strong>.
             </div>
-
         </div>
 
     </div>
 
     <script>
-
         const analyzeBtn = document.getElementById('analyzeBtn');
         const clearBtn = document.getElementById('clearBtn');
         const textInput = document.getElementById('textInput');
@@ -300,7 +356,6 @@
         themeToggle.addEventListener('click', toggleTheme);
 
         function analyzeText() {
-
             const text = textInput.value.trim();
 
             if (!text) {
@@ -313,183 +368,121 @@
             }
 
             analyzeBtn.disabled = true;
-            analyzeBtn.innerHTML = `
-                Analyzing
-                <span class="loading"></span>
-            `;
+            analyzeBtn.innerHTML = `Analyzing<span class="loading"></span>`;
 
             setTimeout(() => {
-
-                const words = text
-                    .toLowerCase()
-                    .match(/\b[a-z']+\b/g) || [];
-
+                const words = text.toLowerCase().match(/\b[a-z']+\b/g) || [];
                 const frequency = {};
 
                 words.forEach(word => {
-
                     if (word.length > 3) {
-
-                        frequency[word] =
-                            (frequency[word] || 0) + 1;
+                        frequency[word] = (frequency[word] || 0) + 1;
                     }
-
                 });
 
                 const topWords = Object.entries(frequency)
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 12);
 
-                const sentences =
-                    text.split(/[.!?]+/)
+                const sentences = text
+                    .split(/[.!?]+/)
                     .filter(s => s.trim().length > 0);
 
-                const paragraphs =
-                    text.split(/\n+/)
+                const paragraphs = text
+                    .split(/\n+/)
                     .filter(p => p.trim().length > 0);
 
-                let tone = "Neutral";
+                let tone = 'Neutral';
 
-                if (text.includes("!")) {
-                    tone = "Energetic";
+                if (text.includes('!')) {
+                    tone = 'Energetic';
                 }
 
-                if (text.includes("?")) {
-                    tone += " & Reflective";
+                if (text.includes('?')) {
+                    tone += ' / Reflective';
                 }
 
                 if (text.length > 1200) {
-                    tone += " & Deeply Analytical";
+                    tone += ' / Analytical';
                 }
 
-                const averageSentence =
-                    Math.round(
-                        words.length / Math.max(sentences.length, 1)
-                    );
+                const averageSentence = Math.round(
+                    words.length / Math.max(sentences.length, 1)
+                );
 
-                const repeatedThemes =
-                    topWords
+                const repeatedThemes = topWords
                     .slice(0, 3)
                     .map(item => item[0]);
 
                 resultsContainer.innerHTML = `
-
                     <div class="results">
 
                         <div class="card">
-
-                            <div class="card-title">
-                                COMMON WORDS
-                            </div>
-
+                            <div class="card-title">COMMON WORDS</div>
                             <div class="word-list">
-
                                 ${topWords.map(([word, count]) => `
-                                    <div class="word-tag">
-                                        ${word} (${count})
-                                    </div>
+                                    <div class="word-tag">${word} (${count})</div>
                                 `).join('')}
-
                             </div>
-
                         </div>
 
                         <div class="card">
-
-                            <div class="card-title">
-                                TEXT STATS
-                            </div>
-
+                            <div class="card-title">TEXT STATS</div>
                             <p><strong>Words:</strong> ${words.length}</p>
                             <p><strong>Sentences:</strong> ${sentences.length}</p>
                             <p><strong>Paragraphs:</strong> ${paragraphs.length}</p>
-                            <p><strong>Avg Sentence:</strong> ${averageSentence} words</p>
+                            <p><strong>Average sentence:</strong> ${averageSentence} words</p>
                             <p><strong>Characters:</strong> ${text.length}</p>
-
                         </div>
 
                         <div class="card">
-
-                            <div class="card-title">
-                                DETECTED TONE
-                            </div>
-
+                            <div class="card-title">DETECTED TONE</div>
                             <p>${tone}</p>
-
                         </div>
 
                         <div class="card">
-
-                            <div class="card-title">
-                                RECURRING THEMES
-                            </div>
-
-                            <p>
-                                ${repeatedThemes.join(', ')}
-                            </p>
-
+                            <div class="card-title">RECURRING THEMES</div>
+                            <p>${repeatedThemes.join(', ')}</p>
                         </div>
 
                         <div class="card summary">
-
-                            <div class="card-title">
-                                PATTERN SUMMARY
-                            </div>
-
+                            <div class="card-title">PATTERN SUMMARY</div>
                             <p>
-                                Your writing repeatedly circles around
-                                ideas connected to
+                                Your writing repeatedly returns to
                                 <strong>${repeatedThemes.join(', ')}</strong>.
-
-                                The pacing suggests a
-                                <strong>${tone.toLowerCase()}</strong>
-                                communication style.
-
-                                Sentence density averages
+                                The pacing reads as
+                                <strong>${tone.toLowerCase()}</strong>.
+                                Average sentence length is
                                 <strong>${averageSentence} words</strong>,
-                                which gives the text a
-                                ${averageSentence > 18
-                                    ? 'layered and contemplative'
-                                    : 'fast and direct'}
+                                which gives the piece a
+                                ${averageSentence > 18 ? 'layered and contemplative' : 'direct and fast-moving'}
                                 rhythm.
                             </p>
-
                         </div>
 
                     </div>
                 `;
 
                 analyzeBtn.disabled = false;
-                analyzeBtn.innerHTML = `Find Patterns`;
-
-            }, 700);
+                analyzeBtn.innerHTML = 'Analyze Text';
+            }, 500);
         }
 
         function clearAll() {
-
             textInput.value = '';
-
             resultsContainer.innerHTML = `
                 <div class="empty-state">
-                    Paste text above and click
-                    <strong>Find Patterns</strong>
+                    Paste text above, then click <strong>Analyze Text</strong>.
                 </div>
             `;
         }
 
         function toggleTheme() {
-
-            document.body.classList.toggle('dark-mode');
-
-            if (
-                document.body.classList.contains('dark-mode')
-            ) {
-                themeToggle.innerHTML = '☀️';
-            } else {
-                themeToggle.innerHTML = '🌙';
-            }
+            document.body.classList.toggle('light-mode');
+            themeToggle.textContent = document.body.classList.contains('light-mode')
+                ? 'Dark'
+                : 'Light';
         }
-
     </script>
 
 </body>

@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pattern Spotter Lite</title>
+
     <style>
         * {
             margin: 0;
@@ -12,12 +13,12 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #2c3e50;
             min-height: 100vh;
             padding: 20px;
-            transition: background 0.3s ease, color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         body.dark-mode {
@@ -26,7 +27,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1000px;
             margin: 0 auto;
         }
 
@@ -35,17 +36,14 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 40px;
-            padding: 20px 0;
         }
 
         .logo {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 700;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.5px;
         }
 
         .theme-toggle {
@@ -53,167 +51,124 @@
             border: none;
             font-size: 24px;
             cursor: pointer;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+            padding: 10px;
+            border-radius: 12px;
+            transition: 0.3s;
         }
 
         .theme-toggle:hover {
-            background: rgba(102, 126, 234, 0.1);
             transform: rotate(20deg);
+            background: rgba(102,126,234,0.1);
         }
 
         .subtitle {
-            font-size: 14px;
-            opacity: 0.7;
             text-align: center;
             margin-bottom: 30px;
+            opacity: 0.7;
             font-style: italic;
         }
 
         .input-section {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(255,255,255,0.7);
             backdrop-filter: blur(10px);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 30px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
 
         body.dark-mode .input-section {
-            background: rgba(30, 35, 60, 0.7);
-            border-color: rgba(102, 126, 234, 0.2);
+            background: rgba(30,35,60,0.7);
         }
 
-        .input-section:hover {
-            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.15);
-        }
-
-        #textInput {
+        textarea {
             width: 100%;
-            height: 200px;
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 18px;
+            height: 220px;
+            border: 2px solid #ddd;
+            border-radius: 14px;
+            padding: 20px;
             font-size: 16px;
-            font-family: 'Courier New', monospace;
             resize: vertical;
-            background: white;
-            color: #2c3e50;
-            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
             margin-bottom: 20px;
+            transition: 0.3s;
         }
 
-        body.dark-mode #textInput {
+        body.dark-mode textarea {
             background: #1a1a2e;
-            border-color: #333;
-            color: #e0e0e0;
+            color: white;
+            border-color: #444;
         }
 
-        #textInput:focus {
+        textarea:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
         }
 
         .button-group {
             display: flex;
-            gap: 12px;
+            gap: 15px;
             flex-wrap: wrap;
         }
 
         button {
-            padding: 12px 24px;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
             flex: 1;
-            min-width: 120px;
+            min-width: 140px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
         #analyzeBtn {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
         }
 
-        #analyzeBtn:hover:not(:disabled) {
+        #analyzeBtn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        #analyzeBtn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
+            box-shadow: 0 10px 20px rgba(102,126,234,0.3);
         }
 
         #clearBtn {
-            background: rgba(102, 126, 234, 0.1);
-            color: #667eea;
+            background: transparent;
             border: 2px solid #667eea;
-        }
-
-        body.dark-mode #clearBtn {
-            background: rgba(102, 126, 234, 0.15);
+            color: #667eea;
         }
 
         #clearBtn:hover {
-            background: rgba(102, 126, 234, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .results-container {
-            animation: fadeIn 0.4s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            background: rgba(102,126,234,0.1);
         }
 
         .results {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+            gap: 20px;
         }
 
         .card {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255,255,255,0.8);
             backdrop-filter: blur(10px);
-            border-radius: 14px;
+            border-radius: 18px;
             padding: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            transition: all 0.3s ease;
-            animation: slideUp 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            animation: fadeUp 0.4s ease;
         }
 
         body.dark-mode .card {
-            background: rgba(30, 35, 60, 0.8);
-            border-color: rgba(102, 126, 234, 0.2);
+            background: rgba(30,35,60,0.8);
         }
 
-        .card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.2);
-        }
-
-        @keyframes slideUp {
+        @keyframes fadeUp {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -221,20 +176,11 @@
         }
 
         .card-title {
-            font-size: 16px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 14px;
-            letter-spacing: 0.5px;
-        }
-
-        .card-content {
-            font-size: 15px;
-            line-height: 1.6;
-            opacity: 0.85;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            color: #667eea;
         }
 
         .word-list {
@@ -244,152 +190,307 @@
         }
 
         .word-tag {
-            display: inline-block;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-            border: 1px solid rgba(102, 126, 234, 0.3);
+            background: rgba(102,126,234,0.1);
+            border: 1px solid rgba(102,126,234,0.3);
+            padding: 8px 12px;
             border-radius: 20px;
-            padding: 6px 14px;
             font-size: 13px;
-            font-weight: 500;
             color: #667eea;
-            transition: all 0.3s ease;
         }
 
-        body.dark-mode .word-tag {
-            color: #a0aef0;
-        }
-
-        .word-tag:hover {
-            background: rgba(102, 126, 234, 0.2);
-            transform: scale(1.05);
-        }
-
-        .card.themes {
-            border-left: 4px solid #667eea;
-        }
-
-        .card.phrases {
-            border-left: 4px solid #764ba2;
-        }
-
-        .card.tone-shift {
-            border-left: 4px solid #f093fb;
-        }
-
-        .card.summary {
+        .summary {
             grid-column: 1 / -1;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.05));
-            border: 2px solid rgba(102, 126, 234, 0.2);
         }
 
-        body.dark-mode .card.summary {
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(118, 75, 162, 0.1));
-        }
-
-        .no-results {
+        .empty-state {
             text-align: center;
-            padding: 60px 30px;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 14px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-        }
-
-        body.dark-mode .no-results {
-            background: rgba(30, 35, 60, 0.7);
-            border-color: rgba(102, 126, 234, 0.2);
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-        }
-
-        .no-results p {
-            font-size: 16px;
-            opacity: 0.7;
-            margin: 0;
+            padding: 60px 20px;
+            opacity: 0.6;
         }
 
         .loading {
             display: inline-block;
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
+            width: 8px;
+            height: 8px;
             background: white;
-            animation: pulse 1.5s infinite;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
+            0%,100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
         }
 
-        @media (max-width: 640px) {
-            header {
-                margin-bottom: 30px;
+        @media(max-width: 700px) {
+            .results {
+                grid-template-columns: 1fr;
             }
 
             .logo {
                 font-size: 24px;
             }
 
-            .input-section {
-                padding: 20px;
-            }
-
-            #textInput {
-                height: 150px;
-                font-size: 14px;
-            }
-
-            button {
-                font-size: 14px;
-                padding: 10px 18px;
-            }
-
-            .results {
-                grid-template-columns: 1fr;
-            }
-
-            .card.summary {
-                grid-column: 1;
-            }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                transition-duration: 0.01ms !important;
+            textarea {
+                height: 180px;
             }
         }
     </style>
 </head>
+
 <body>
+
     <div class="container">
+
         <header>
             <div class="logo">✨ Pattern Spotter Lite</div>
-            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
-                <span id="themeIcon">🌙</span>
+
+            <button class="theme-toggle" id="themeToggle">
+                🌙
             </button>
         </header>
 
-        <div class="subtitle">Discover hidden patterns in your writing</div>
-
-        <div class="input-section">
-            <textarea
-                id="textInput"
-                placeholder="Paste your text here... A journal entry, essay, thoughts, anything. We'll find the hidden patterns."></textarea>
-
-            <div class="button-group">
-                <button id="analyzeBtn" type="button">Find Patterns</button>
-                <button id="clearBtn" type="button">Clear</button>
-            </div>
+        <div class="subtitle">
+            Discover hidden patterns in your writing
         </div>
 
-                <div class="results-container" id="resultsContainer"></div>
+        <div class="input-section">
+
+            <textarea
+                id="textInput"
+                placeholder="Paste your journal, thoughts, essay, dreams, conspiracy notes, philosophy, poetry... anything."></textarea>
+
+            <div class="button-group">
+                <button id="analyzeBtn">
+                    Find Patterns
+                </button>
+
+                <button id="clearBtn">
+                    Clear
+                </button>
+            </div>
+
+        </div>
+
+        <div id="resultsContainer">
+
+            <div class="empty-state">
+                Paste text above and click <strong>Find Patterns</strong>
+            </div>
+
+        </div>
+
     </div>
 
-    <script src="script.js"></script>
+    <script>
+
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const textInput = document.getElementById('textInput');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const themeToggle = document.getElementById('themeToggle');
+
+        analyzeBtn.addEventListener('click', analyzeText);
+        clearBtn.addEventListener('click', clearAll);
+        themeToggle.addEventListener('click', toggleTheme);
+
+        function analyzeText() {
+
+            const text = textInput.value.trim();
+
+            if (!text) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        Please enter some text first.
+                    </div>
+                `;
+                return;
+            }
+
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = `
+                Analyzing
+                <span class="loading"></span>
+            `;
+
+            setTimeout(() => {
+
+                const words = text
+                    .toLowerCase()
+                    .match(/\b[a-z']+\b/g) || [];
+
+                const frequency = {};
+
+                words.forEach(word => {
+
+                    if (word.length > 3) {
+
+                        frequency[word] =
+                            (frequency[word] || 0) + 1;
+                    }
+
+                });
+
+                const topWords = Object.entries(frequency)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 12);
+
+                const sentences =
+                    text.split(/[.!?]+/)
+                    .filter(s => s.trim().length > 0);
+
+                const paragraphs =
+                    text.split(/\n+/)
+                    .filter(p => p.trim().length > 0);
+
+                let tone = "Neutral";
+
+                if (text.includes("!")) {
+                    tone = "Energetic";
+                }
+
+                if (text.includes("?")) {
+                    tone += " & Reflective";
+                }
+
+                if (text.length > 1200) {
+                    tone += " & Deeply Analytical";
+                }
+
+                const averageSentence =
+                    Math.round(
+                        words.length / Math.max(sentences.length, 1)
+                    );
+
+                const repeatedThemes =
+                    topWords
+                    .slice(0, 3)
+                    .map(item => item[0]);
+
+                resultsContainer.innerHTML = `
+
+                    <div class="results">
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                COMMON WORDS
+                            </div>
+
+                            <div class="word-list">
+
+                                ${topWords.map(([word, count]) => `
+                                    <div class="word-tag">
+                                        ${word} (${count})
+                                    </div>
+                                `).join('')}
+
+                            </div>
+
+                        </div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                TEXT STATS
+                            </div>
+
+                            <p><strong>Words:</strong> ${words.length}</p>
+                            <p><strong>Sentences:</strong> ${sentences.length}</p>
+                            <p><strong>Paragraphs:</strong> ${paragraphs.length}</p>
+                            <p><strong>Avg Sentence:</strong> ${averageSentence} words</p>
+                            <p><strong>Characters:</strong> ${text.length}</p>
+
+                        </div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                DETECTED TONE
+                            </div>
+
+                            <p>${tone}</p>
+
+                        </div>
+
+                        <div class="card">
+
+                            <div class="card-title">
+                                RECURRING THEMES
+                            </div>
+
+                            <p>
+                                ${repeatedThemes.join(', ')}
+                            </p>
+
+                        </div>
+
+                        <div class="card summary">
+
+                            <div class="card-title">
+                                PATTERN SUMMARY
+                            </div>
+
+                            <p>
+                                Your writing repeatedly circles around
+                                ideas connected to
+                                <strong>${repeatedThemes.join(', ')}</strong>.
+
+                                The pacing suggests a
+                                <strong>${tone.toLowerCase()}</strong>
+                                communication style.
+
+                                Sentence density averages
+                                <strong>${averageSentence} words</strong>,
+                                which gives the text a
+                                ${averageSentence > 18
+                                    ? 'layered and contemplative'
+                                    : 'fast and direct'}
+                                rhythm.
+                            </p>
+
+                        </div>
+
+                    </div>
+                `;
+
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = `Find Patterns`;
+
+            }, 700);
+        }
+
+        function clearAll() {
+
+            textInput.value = '';
+
+            resultsContainer.innerHTML = `
+                <div class="empty-state">
+                    Paste text above and click
+                    <strong>Find Patterns</strong>
+                </div>
+            `;
+        }
+
+        function toggleTheme() {
+
+            document.body.classList.toggle('dark-mode');
+
+            if (
+                document.body.classList.contains('dark-mode')
+            ) {
+                themeToggle.innerHTML = '☀️';
+            } else {
+                themeToggle.innerHTML = '🌙';
+            }
+        }
+
+    </script>
+
 </body>
 </html>

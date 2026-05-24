@@ -369,7 +369,7 @@
     <div class="container">
         <header>
             <div class="logo">✨ Pattern Spotter Lite</div>
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <button class="theme-toggle" id="themeToggle" type="button" aria-label="Toggle dark mode">
                 <span id="themeIcon">🌙</span>
             </button>
         </header>
@@ -377,18 +377,19 @@
         <div class="subtitle">Discover hidden patterns in your writing</div>
 
         <div class="input-section">
-            <textarea 
-                id="textInput" 
+            <textarea
+                id="textInput"
                 placeholder="Paste your text here... A journal entry, essay, thoughts, anything. We'll find the hidden patterns."></textarea>
+
             <div class="button-group">
-                <button id="analyzeBtn">Find Patterns</button>
-                <button id="clearBtn">Clear</button>
+                <button id="analyzeBtn" type="button">Find Patterns</button>
+                <button id="clearBtn" type="button">Clear</button>
             </div>
         </div>
 
         <div class="results-container" id="resultsContainer"></div>
     </div>
 
-    <script src="script.js"></script>
+    <<script src="script.js"></script>
 </body>
 </html>

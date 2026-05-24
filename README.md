@@ -1,4 +1,4 @@
-# ✨ Pattern Spotter Lite
+# Pattern Spotter Lite
 
 A clean, artsy web app that discovers hidden patterns in your writing.
 
@@ -12,11 +12,11 @@ A clean, artsy web app that discovers hidden patterns in your writing.
 
 ## Design
 
-- 🎨 **Clean, slightly artsy aesthetic** with gradient accents (purples & blues)
-- 🌙 **Dark mode** (toggle with button, saved to localStorage)
-- ✨ **Smooth animations** and hover effects
-- 📱 **Mobile-responsive** cards and layout
-- ⚡ **Single-page, no dependencies** – just HTML, CSS, and vanilla JS
+-  **Clean, slightly artsy aesthetic** with gradient accents (purples & blues)
+-  **Dark mode** (toggle with button, saved to localStorage)
+-  **Smooth animations** and hover effects
+-  **Mobile-responsive** cards and layout
+-  **Single-page, no dependencies** – just HTML, CSS, and vanilla JS
 
 ## Usage
 
@@ -46,4 +46,4 @@ All analysis runs **locally in your browser** — nothing is sent to servers.
 
 ---
 
-Made for writers, thinkers, and pattern-spotters. ✨
+Made for writers, thinkers, and pattern-spotters. 

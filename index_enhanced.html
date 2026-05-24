@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pattern Spotter Lite</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0b0f14;
+            --bg-elevated: #121821;
+            --panel: #151c25;
+            --panel-2: #1a222d;
+            --border: #273241;
+            --text: #e6edf3;
+            --muted: #94a3b8;
+            --accent: #3aa0a9;
+            --accent-strong: #2b7f86;
+            --accent-soft: rgba(58, 160, 169, 0.12);
+            --shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+            --radius: 16px;
+        }
+
+        body {
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(180deg, #0a0e13 0%, #0f141b 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 24px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        body.light-mode {
+            --bg: #f3f5f7;
+            --bg-elevated: #ffffff;
+            --panel: #ffffff;
+            --panel-2: #f8fafc;
+            --border: #d8e0e8;
+            --text: #17202a;
+            --muted: #5f6b7a;
+            --accent: #1f6f78;
+            --accent-strong: #17545b;
+            --accent-soft: rgba(31, 111, 120, 0.10);
+            --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            background: linear-gradient(180deg, #eef2f5 0%, #f7f9fb 100%);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            gap: 16px;
+        }
+
+        .logo-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text);
+        }
+
+        .subtitle {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        .theme-toggle {
+            background: var(--panel);
+            color: var(--text);
+            border: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 10px 14px;
+            border-radius: 12px;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .theme-toggle:hover,
+        .action-button:hover,
+        .toggle-chip:hover,
+        .collapsible-toggle:hover {
+            background: var(--panel-2);
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .input-section,
+        .card,
+        .empty-state,
+        .controls-row {
+            background: rgba(18, 24, 33, 0.92);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        body.light-mode .input-section,
+        body.light-mode .card,
+        body.light-mode .empty-state,
+        body.light-mode .controls-row {
+            background: rgba(255, 255, 255, 0.94);
+        }
+
+        .input-section {
+            padding: 24px;
+            margin-bottom: 16px;
+        }
+
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 14px;
+            margin-bottom: 26px;
+        }
+
+        .toggle-chip,
+        .action-button,
+        .collapsible-toggle {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+        }
+
+        .toggle-chip.active {
+            background: var(--accent-soft);
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        textarea {
+            width: 100%;
+            height: 220px;
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            font-size: 15px;
+            line-height: 1.6;
+            resize: vertical;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+            margin-bottom: 18px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+            background: var(--bg);
+            color: var(--text);
+        }
+
+        textarea::placeholder {
+            color: var(--muted);
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-soft);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            min-width: 140px;
+            padding: 13px 18px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+        }
+
+        #analyzeBtn {
+            background: var(--accent);
+            color: #071217;
+            border: 1px solid var(--accent);
+        }
+
+        #analyzeBtn:hover {
+            background: var(--accent-strong);
+            border-color: var(--accent-strong);
+            color: #f4fbfc;
+            transform: translateY(-1px);
+        }
+
+        #analyzeBtn:disabled {
+            opacity: 0.75;
+            cursor: wait;
+            transform: none;
+        }
+
+        #clearBtn {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        #clearBtn:hover {
+            background: var(--panel-2);
+            border-color: var(--accent);
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            padding: 20px;
+            animation: fadeUp 0.25s ease;
+        }
+
+        .summary,
+        .wide-card {
+            grid-column: 1 / -1;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-title {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            margin-bottom: 14px;
+            color: var(--accent);
+        }
+
+        .card p,
+        .card li {
+            line-height: 1.65;
+            color: var(--text);
+        }
+
+        .card p {
+            margin-bottom: 8px;
+        }
+
+        .card p:last-child {
+            margin-bottom: 0;
+        }
+
+        .word-list,
+        .chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .word-tag,
+        .chip {
+            background: var(--accent-soft);
+            border: 1px solid rgba(58, 160, 169, 0.28);
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .metric {
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        body.light-mode .metric {
+            background: rgba(15, 23, 42, 0.02);
+        }
+
+        .metric-label {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .metric-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .paragraph-list {
+            display: grid;
+            gap: 12px;
+        }
+
+        .paragraph-item {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px;
+            background: rgba(255,255,255,0.02);
+        }
+
+        body.light-mode .paragraph-item {
+            background: rgba(15,23,42,0.02);
+        }
+
+        .paragraph-meta {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 6px;
+        }
+
+        .paragraph-preview {
+            color: var(--text);
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 20px;
+            color: var(--muted);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-left: 8px;
+            background: currentColor;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+        strong {
+            color: var(--text);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .tool-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 700px) {
+            body {
+                padding: 16px;
+            }
+
+            .logo {
+                font-size: 24px;
+            }
+
+            textarea {
+                height: 180px;
+            }
+
+            .results {
+                grid-template-columns: 1fr;
+            }
+
+            .summary,
+            .wide-card {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <header>
+            <div class="logo-wrap">
+                <div class="logo">Pattern Spotter Lite</div>
+            </div>
+
+            <button class="theme-toggle" id="themeToggle" type="button">Light</button>
+        </header>
+
+        <div class="subtitle">
+            Analyze pasted writing for repeated words, recurring themes, tone signals, structural rhythm, and paragraph-level shifts.
+        </div>
+
+        <div class="input-section">
+            <textarea
+                id="textInput"
+                placeholder="Paste your text here. Journal entries, essays, notes, fragments, ideas, or drafts all work."></textarea>
+
+            <div class="button-group">
+                <button id="analyzeBtn" type="button">Analyze Text</button>
+                <button id="clearBtn" type="button">Clear</button>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <button class="toggle-chip active" id="filterStopWordsBtn" type="button">Stop-word filter: On</button>
+            <button class="toggle-chip active" id="phraseDetectionBtn" type="button">Phrase detection: On</button>
+            <button class="toggle-chip active" id="paragraphToneBtn" type="button">Paragraph analysis: On</button>
+            <button class="toggle-chip active" id="pronounLensBtn" type="button">Pronoun lens: On</button>
+        </div>
+
+        <div id="resultsContainer">
+            <div class="empty-state">
+                Paste text above, then click <strong>Analyze Text</strong>.
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const textInput = document.getElementById('textInput');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const themeToggle = document.getElementById('themeToggle');
+        const filterStopWordsBtn = document.getElementById('filterStopWordsBtn');
+        const phraseDetectionBtn = document.getElementById('phraseDetectionBtn');
+        const paragraphToneBtn = document.getElementById('paragraphToneBtn');
+        const pronounLensBtn = document.getElementById('pronounLensBtn');
+
+        let settings = {
+            stopWords: true,
+            phrases: true,
+            paragraphs: true,
+            pronouns: true
+        };
+
+        const stopWords = new Set([
+            'the','and','that','this','with','from','have','your','they','their','there','about','would','could','should','into','through','because','while','where','when','which','them','then','than','just','some','like','what','been','being','were','will','shall','unto','upon','over','under','again','still','very','much','more','most','less','only','also','even','such','each','many','make','made','does','did','done','ours','ourselves','yours','yourself','yourselves','him','himself','her','herself','his','hers','its','itself','our','ours','you','your','yours','my','mine','myself','we','me','was','are','for','not','but','can','had','has','all','any','out','who','why','how','too','off','here','than','these','those','after','before','between','around','across','within','without','essay','journal','notes'
+        ]);
+
+        const themeLexicon = {
+            identity: ['self','identity','name','mirror','becoming','mask','persona','soul','inside','authentic'],
+            time: ['time','past','future','memory','years','days','night','morning','later','earlier','history'],
+            conflict: ['fight','war','tension','pressure','against','friction','conflict','struggle','battle','stress'],
+            emotion: ['love','fear','hope','pain','joy','sad','anger','grief','desire','feeling'],
+            control: ['power','control','order','system','discipline','force','command','structure','rule','authority'],
+            uncertainty: ['maybe','perhaps','unclear','unknown','doubt','question','wonder','uncertain','possible','confused'],
+            connection: ['friend','family','people','together','relationship','touch','voice','shared','near','belong'],
+            ambition: ['goal','build','create','achieve','work','future','success','vision','drive','growth']
+        };
+
+        const positiveWords = new Set(['hope','joy','love','calm','good','clear','strong','bright','alive','trust','steady','warm','kind','open','grace']);
+        const negativeWords = new Set(['fear','pain','sad','anger','dark','doubt','loss','hard','broken','cold','stress','grief','wound','tense','unclear']);
+        const reflectiveWords = new Set(['think','wonder','perhaps','maybe','seems','question','reflect','memory','remember','consider','feel']);
+        const intenseWords = new Set(['must','never','always','everything','nothing','extreme','urgent','force','burn','fight']);
+
+        analyzeBtn.addEventListener('click', analyzeText);
+        clearBtn.addEventListener('click', clearAll);
+        themeToggle.addEventListener('click', toggleTheme);
+        filterStopWordsBtn.addEventListener('click', () => toggleSetting('stopWords', filterStopWordsBtn, 'Stop-word filter'));
+        phraseDetectionBtn.addEventListener('click', () => toggleSetting('phrases', phraseDetectionBtn, 'Phrase detection'));
+        paragraphToneBtn.addEventListener('click', () => toggleSetting('paragraphs', paragraphToneBtn, 'Paragraph analysis'));
+        pronounLensBtn.addEventListener('click', () => toggleSetting('pronouns', pronounLensBtn, 'Pronoun lens'));
+
+        function toggleSetting(key, button, label) {
+            settings[key] = !settings[key];
+            button.classList.toggle('active', settings[key]);
+            button.textContent = `${label}: ${settings[key] ? 'On' : 'Off'}`;
+        }
+
+        function tokenize(text) {
+            return text.toLowerCase().match(/\b[a-z']+\b/g) || [];
+        }
+
+        function buildFrequency(words, useStopWordFilter) {
+            const frequency = {};
+            words.forEach(word => {
+                if (word.length <= 3) return;
+                if (useStopWordFilter && stopWords.has(word)) return;
+                frequency[word] = (frequency[word] || 0) + 1;
+            });
+            return Object.entries(frequency)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 12);
+        }
+
+        function buildNgrams(words, size) {
+            const map = {};
+            for (let i = 0; i <= words.length - size; i++) {
+                const gramWords = words.slice(i, i + size);
+                if (gramWords.some(word => word.length <= 2)) continue;
+                if (settings.stopWords && gramWords.every(word => stopWords.has(word))) continue;
+                const gram = gramWords.join(' ');
+                map[gram] = (map[gram] || 0) + 1;
+            }
+            return Object.entries(map)
+                .filter(([, count]) => count > 1)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8);
+        }
+
+        function scoreThemes(words) {
+            const scores = Object.entries(themeLexicon).map(([theme, lexicon]) => {
+                const count = words.filter(word => lexicon.includes(word)).length;
+                return [theme, count];
+            }).filter(([, count]) => count > 0)
+              .sort((a, b) => b[1] - a[1]);
+            return scores.slice(0, 5);
+        }
+
+        function analyzeTone(words, text) {
+            let positive = 0;
+            let negative = 0;
+            let reflective = 0;
+            let intense = 0;
+
+            words.forEach(word => {
+                if (positiveWords.has(word)) positive++;
+                if (negativeWords.has(word)) negative++;
+                if (reflectiveWords.has(word)) reflective++;
+                if (intenseWords.has(word)) intense++;
+            });
+
+            const labels = [];
+            if (positive > negative) labels.push('Positive');
+            if (negative > positive) labels.push('Heavy');
+            if (reflective > 1 || text.includes('?')) labels.push('Reflective');
+            if (intense > 1 || text.includes('!')) labels.push('Intense');
+            if (labels.length === 0) labels.push('Neutral');
+
+            return {
+                label: labels.join(' / '),
+                positive,
+                negative,
+                reflective,
+                intense
+            };
+        }
+
+        function analyzePronouns(words) {
+            const counts = { first: 0, second: 0, third: 0 };
+            const first = new Set(['i','me','my','mine','myself','we','us','our','ours']);
+            const second = new Set(['you','your','yours','yourself']);
+            const third = new Set(['he','him','his','she','her','hers','they','them','their','theirs','it','its']);
+
+            words.forEach(word => {
+                if (first.has(word)) counts.first++;
+                if (second.has(word)) counts.second++;
+                if (third.has(word)) counts.third++;
+            });
+
+            let dominant = 'Balanced';
+            if (counts.first > counts.second && counts.first > counts.third) dominant = 'First-person / inward';
+            else if (counts.second > counts.first && counts.second > counts.third) dominant = 'Second-person / direct';
+            else if (counts.third > counts.first && counts.third > counts.second) dominant = 'Third-person / observational';
+
+            return { counts, dominant };
+        }
+
+        function analyzeParagraphs(text) {
+            return text
+                .split(/\n+/)
+                .map(p => p.trim())
+                .filter(Boolean)
+                .map((paragraph, index) => {
+                    const words = tokenize(paragraph);
+                    const tone = analyzeTone(words, paragraph);
+                    const topTerms = buildFrequency(words, settings.stopWords).slice(0, 3).map(item => item[0]);
+                    return {
+                        index: index + 1,
+                        words: words.length,
+                        tone: tone.label,
+                        topTerms,
+                        preview: paragraph.length > 180 ? paragraph.slice(0, 180) + '…' : paragraph
+                    };
+                });
+        }
+
+        function createParagraphHTML(paragraphs) {
+            if (!paragraphs.length) {
+                return '<p>No paragraph-level shifts detected.</p>';
+            }
+
+            return `
+                <div class="paragraph-list">
+                    ${paragraphs.map(item => `
+                        <div class="paragraph-item">
+                            <div class="paragraph-meta">Paragraph ${item.index} · ${item.words} words · ${item.tone}</div>
+                            <div class="paragraph-preview">${escapeHtml(item.preview)}</div>
+                            <div class="chip-list" style="margin-top:10px;">
+                                ${item.topTerms.map(term => `<span class="chip">${escapeHtml(term)}</span>`).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        function buildSummary(data) {
+            const topThemeNames = data.themeScores.length
+                ? data.themeScores.slice(0, 3).map(item => item[0]).join(', ')
+                : data.topWords.slice(0, 3).map(item => item[0]).join(', ');
+
+            const phraseLine = data.topPhrases.length
+                ? `Repeated phrases like ${data.topPhrases.slice(0, 2).map(item => `“${item[0]}”`).join(' and ')} make the motifs more explicit.`
+                : 'The text leans more on single-word repetition than repeated phrases.';
+
+            return `
+                Your writing repeatedly returns to <strong>${escapeHtml(topThemeNames || 'recurring ideas')}</strong>.
+                The overall tone reads as <strong>${escapeHtml(data.tone.label.toLowerCase())}</strong>.
+                Average sentence length is <strong>${data.averageSentence} words</strong>, which gives the piece a
+                ${data.averageSentence > 18 ? 'layered and contemplative' : 'direct and fast-moving'} rhythm.
+                ${phraseLine}
+            `;
+        }
+
+        function buildExportText(data) {
+            const lines = [];
+            lines.push('PATTERN SPOTTER LITE');
+            lines.push('');
+            lines.push(`Words: ${data.wordCount}`);
+            lines.push(`Sentences: ${data.sentences.length}`);
+            lines.push(`Paragraphs: ${data.paragraphs.length}`);
+            lines.push(`Average sentence: ${data.averageSentence} words`);
+            lines.push(`Tone: ${data.tone.label}`);
+            lines.push('');
+            lines.push('Top words:');
+            data.topWords.forEach(([word, count]) => lines.push(`- ${word} (${count})`));
+            lines.push('');
+            lines.push('Top phrases:');
+            data.topPhrases.forEach(([phrase, count]) => lines.push(`- ${phrase} (${count})`));
+            lines.push('');
+            lines.push('Theme scores:');
+            data.themeScores.forEach(([theme, count]) => lines.push(`- ${theme}: ${count}`));
+            lines.push('');
+            lines.push('Pronoun lens:');
+            lines.push(`- Dominant perspective: ${data.pronouns.dominant}`);
+            lines.push(`- First person: ${data.pronouns.counts.first}`);
+            lines.push(`- Second person: ${data.pronouns.counts.second}`);
+            lines.push(`- Third person: ${data.pronouns.counts.third}`);
+            lines.push('');
+            lines.push('Summary:');
+            lines.push(data.summaryPlain);
+            return lines.join('\n');
+        }
+
+        function renderResults(data) {
+            const summaryHtml = buildSummary(data);
+            const exportText = buildExportText(data);
+
+            resultsContainer.innerHTML = `
+                <div class="toolbar">
+                    <div class="card-title" style="margin-bottom:0;">ANALYSIS RESULTS</div>
+                    <div class="tool-actions">
+                        <button class="action-button" id="copyResultsBtn" type="button">Copy Results</button>
+                        <button class="action-button" id="downloadResultsBtn" type="button">Download .txt</button>
+                        <button class="collapsible-toggle" id="toggleParagraphsBtn" type="button">Hide Paragraph Detail</button>
+                    </div>
+                </div>
+
+                <div class="results">
+                    <div class="card wide-card">
+                        <div class="card-title">OVERVIEW</div>
+                        <div class="metric-grid">
+                            <div class="metric"><div class="metric-label">Words</div><div class="metric-value">${data.wordCount}</div></div>
+                            <div class="metric"><div class="metric-label">Sentences</div><div class="metric-value">${data.sentences.length}</div></div>
+                            <div class="metric"><div class="metric-label">Paragraphs</div><div class="metric-value">${data.paragraphs.length}</div></div>
+                            <div class="metric"><div class="metric-label">Avg sentence</div><div class="metric-value">${data.averageSentence}</div></div>
+                            <div class="metric"><div class="metric-label">Questions</div><div class="metric-value">${data.questionCount}</div></div>
+                            <div class="metric"><div class="metric-label">Exclamations</div><div class="metric-value">${data.exclamationCount}</div></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">COMMON WORDS</div>
+                        <div class="word-list">
+                            ${data.topWords.length ? data.topWords.map(([word, count]) => `<div class="word-tag">${escapeHtml(word)} (${count})</div>`).join('') : '<p>No repeated keywords found.</p>'}
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">RECURRING PHRASES</div>
+                        <div class="word-list">
+                            ${data.topPhrases.length ? data.topPhrases.map(([phrase, count]) => `<div class="word-tag">${escapeHtml(phrase)} (${count})</div>`).join('') : '<p>No repeated phrases found.</p>'}
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">DETECTED TONE</div>
+                        <p><strong>${escapeHtml(data.tone.label)}</strong></p>
+                        <p>Positive signals: ${data.tone.positive}</p>
+                        <p>Heavy signals: ${data.tone.negative}</p>
+                        <p>Reflective signals: ${data.tone.reflective}</p>
+                        <p>Intense signals: ${data.tone.intense}</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">THEME SCORES</div>
+                        <div class="chip-list">
+                            ${data.themeScores.length ? data.themeScores.map(([theme, count]) => `<span class="chip">${escapeHtml(theme)} (${count})</span>`).join('') : '<p>No clear theme cluster detected.</p>'}
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">PRONOUN LENS</div>
+                        <p><strong>${escapeHtml(data.pronouns.dominant)}</strong></p>
+                        <p>First person: ${data.pronouns.counts.first}</p>
+                        <p>Second person: ${data.pronouns.counts.second}</p>
+                        <p>Third person: ${data.pronouns.counts.third}</p>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title">STRUCTURE</div>
+                        <p><strong>Longest sentence:</strong> ${data.longestSentence} words</p>
+                        <p><strong>Shortest sentence:</strong> ${data.shortestSentence} words</p>
+                        <p><strong>Rhythm:</strong> ${escapeHtml(data.rhythm)}</p>
+                        <p><strong>Perspective shift:</strong> ${escapeHtml(data.perspectiveShift)}</p>
+                    </div>
+
+                    <div class="card summary wide-card">
+                        <div class="card-title">PATTERN SUMMARY</div>
+                        <p>${summaryHtml}</p>
+                    </div>
+
+                    <div class="card wide-card ${settings.paragraphs ? '' : 'hidden'}" id="paragraphCard">
+                        <div class="card-title">PARAGRAPH BREAKDOWN</div>
+                        ${createParagraphHTML(data.paragraphAnalysis)}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('copyResultsBtn').addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(exportText);
+                    document.getElementById('copyResultsBtn').textContent = 'Copied';
+                    setTimeout(() => {
+                        const btn = document.getElementById('copyResultsBtn');
+                        if (btn) btn.textContent = 'Copy Results';
+                    }, 1000);
+                } catch (error) {
+                    alert('Copy failed on this browser. Try Download .txt instead.');
+                }
+            });
+
+            document.getElementById('downloadResultsBtn').addEventListener('click', () => {
+                const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'pattern-spotter-results.txt';
+                link.click();
+                URL.revokeObjectURL(url);
+            });
+
+            document.getElementById('toggleParagraphsBtn').addEventListener('click', () => {
+                const card = document.getElementById('paragraphCard');
+                if (!card) return;
+                card.classList.toggle('hidden');
+                document.getElementById('toggleParagraphsBtn').textContent = card.classList.contains('hidden')
+                    ? 'Show Paragraph Detail'
+                    : 'Hide Paragraph Detail';
+            });
+        }
+
+        function analyzeText() {
+            const text = textInput.value.trim();
+
+            if (!text) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        Please enter some text first.
+                    </div>
+                `;
+                return;
+            }
+
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = `Analyzing<span class="loading"></span>`;
+
+            setTimeout(() => {
+                const words = tokenize(text);
+                const topWords = buildFrequency(words, settings.stopWords);
+                const sentences = text.split(/[.!?]+/).map(s => s.trim()).filter(Boolean);
+                const sentenceWordLengths = sentences.map(sentence => tokenize(sentence).length).filter(Boolean);
+                const paragraphs = text.split(/\n+/).map(p => p.trim()).filter(Boolean);
+                const tone = analyzeTone(words, text);
+                const topPhrases = settings.phrases
+                    ? [...buildNgrams(words, 2), ...buildNgrams(words, 3)].sort((a, b) => b[1] - a[1]).slice(0, 10)
+                    : [];
+                const themeScores = scoreThemes(words);
+                const pronouns = settings.pronouns ? analyzePronouns(words) : { counts: { first: 0, second: 0, third: 0 }, dominant: 'Disabled' };
+                const paragraphAnalysis = settings.paragraphs ? analyzeParagraphs(text) : [];
+                const averageSentence = Math.round(words.length / Math.max(sentences.length, 1));
+                const longestSentence = sentenceWordLengths.length ? Math.max(...sentenceWordLengths) : 0;
+                const shortestSentence = sentenceWordLengths.length ? Math.min(...sentenceWordLengths) : 0;
+                const questionCount = (text.match(/\?/g) || []).length;
+                const exclamationCount = (text.match(/!/g) || []).length;
+                const rhythm = averageSentence > 22 ? 'Expansive and layered' : averageSentence > 14 ? 'Balanced and controlled' : 'Tight and clipped';
+
+                let perspectiveShift = 'Stable';
+                if (paragraphAnalysis.length >= 2) {
+                    const firstTone = paragraphAnalysis[0].tone;
+                    const lastTone = paragraphAnalysis[paragraphAnalysis.length - 1].tone;
+                    perspectiveShift = firstTone === lastTone ? 'Tone remains relatively consistent' : `${firstTone} to ${lastTone}`;
+                }
+
+                const data = {
+                    wordCount: words.length,
+                    topWords,
+                    topPhrases,
+                    themeScores,
+                    tone,
+                    pronouns,
+                    paragraphAnalysis,
+                    paragraphs,
+                    sentences,
+                    averageSentence,
+                    longestSentence,
+                    shortestSentence,
+                    questionCount,
+                    exclamationCount,
+                    rhythm,
+                    perspectiveShift,
+                    summaryPlain: '',
+                };
+
+                data.summaryPlain = buildSummary(data)
+                    .replace(/<strong>/g, '')
+                    .replace(/<\/strong>/g, '')
+                    .replace(/“/g, '"')
+                    .replace(/”/g, '"')
+                    .replace(/\s+/g, ' ')
+                    .trim();
+
+                renderResults(data);
+
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = 'Analyze Text';
+            }, 500);
+        }
+
+        function clearAll() {
+            textInput.value = '';
+            resultsContainer.innerHTML = `
+                <div class="empty-state">
+                    Paste text above, then click <strong>Analyze Text</strong>.
+                </div>
+            `;
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            themeToggle.textContent = document.body.classList.contains('light-mode') ? 'Dark' : 'Light';
+        }
+    </script>
+
+</body>
+</html>
